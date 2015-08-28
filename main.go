@@ -5,16 +5,15 @@ import "github.com/gin-gonic/gin"
 func main() {
 	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-
-	// archive := router.Group("/archive")
-	// {
-	// 	archive.GET("", getAllEntries)
-	// 	archive.GET("id", getEntry)
-	// 	archive.POST("id", postEntry)
-	// }
+	archives := router.Group("/archives")
+	{
+		archives.GET("", allEntries)
+		archives.GET("id", entry)
+		archives.POST("id", newEntry)
+	}
 	about := router.Group("/about")
 	{
-		about.GET("", getAbout)
+		about.GET("", aboutPage)
 	}
 
 	router.Run("localhost:8000")
