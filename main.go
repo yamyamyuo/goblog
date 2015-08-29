@@ -8,8 +8,8 @@ func main() {
 	archives := router.Group("/archives")
 	{
 		archives.GET("", allEntries)
-		archives.GET("id", entry)
-		archives.POST("id", newEntry)
+		archives.GET(":id", entry)
+		archives.POST(":id", newEntry)
 	}
 	about := router.Group("/about")
 	{
