@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"time"
@@ -11,8 +12,8 @@ import (
 type Entry struct {
 	Title string    `form:"title"`
 	Date  time.Time `form:"time"`
-	Id    int       `form:"id"`
-	text  string    `form:text`
+	Id    string    `form:"id"`
+	Text  string    `form:text`
 }
 
 //TODO use database
@@ -46,13 +47,24 @@ func entry(c *gin.Context) {
 
 func newEntry(c *gin.Context) {
 	var entry Entry
-	if c.Bind(&entry) == nil {
-		log.Println(entry)
-		c.JSON(200, gin.H{
-			"123": "234",
-			"321": "666",
-		})
-	} else {
-		c.JSON(404, "Not Found\n")
-	}
+	c.Bind(&entry)
+	entry.Date = time.Now()
+	fmt.Println(entry)
+	c.JSON(201, entry)
+	// if c.Bind(&entry) == nil {
+	// 	log.Println(entry)
+	// 	c.JSON(200, gin.H{
+	// 		"123": "234",
+	// 		"321": "666",
+	// 	})
+	// } else {
+	// 	c.JSON(404, "Not Found\n")
+	// }
+}
+
+func deleteEntry(c *gin.Context) {
+	var entry Entry
+	c.Bind(&entry)
+	fmt.Println(entry.Id)
+	c.JSON(201, "deleted")
 }
