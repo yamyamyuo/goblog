@@ -64,5 +64,5 @@ func deleteEntry(c *gin.Context) {
 	var entry Entry
 	c.Bind(&entry)
 	log.Println(entry.Id)
-	c.JSON(201, "deleted")
+	c.JSON(200, "deleted")
 }
