@@ -50,13 +50,12 @@ func newEntry(c *gin.Context) {
 	var entry Entry
 	c.Bind(&entry)
 	// Use title as UID, so entry title should be unique
-	// TODO figure out how to remove punctuation in title
-	lst := strings.Fields(entry.Title)
+	lst := strings.Fields(removePunc(entry.Title))
 	entry.Id = strings.Join(lst, "-")
 	entry.Date = time.Now()
+	AllEntries[entry.Id] = entry
 
 	log.Println(entry)
-
 	// year, month, day := entry.Date.Date()
 	c.JSON(201, entry)
 }
