@@ -2,7 +2,6 @@ package main
 
 import (
 	"io/ioutil"
-	"log"
 	"strings"
 	"time"
 
@@ -26,7 +25,6 @@ func aboutPage(c *gin.Context) {
 	// render that string with https://github.com/evilstreak/markdown-js
 	md, err := ioutil.ReadFile("about/about.md")
 	if err != nil {
-		log.Println(err)
 		c.String(404, "Not Found\n")
 	}
 	c.String(200, string(md))
@@ -37,7 +35,7 @@ func allEntries(c *gin.Context) {
 }
 
 func entry(c *gin.Context) {
-	id := c.Request.URL.Query().Get("id")
+	id := c.Param("id")
 	entry, ok := AllEntries[id]
 	if !ok {
 		c.String(404, "Not Found\n")
@@ -55,14 +53,17 @@ func newEntry(c *gin.Context) {
 	entry.Date = time.Now()
 	AllEntries[entry.Id] = entry
 
-	log.Println(entry)
 	// year, month, day := entry.Date.Date()
 	c.JSON(201, entry)
 }
 
 func deleteEntry(c *gin.Context) {
-	var entry Entry
-	c.Bind(&entry)
-	log.Println(entry.Id)
-	c.JSON(200, "deleted")
+	id := c.Param("id")
+	_, ok := AllEntries[id]
+	if !ok {
+		c.String(404, "Not Found\n")
+	} else {
+		delete(AllEntries, id)
+		c.JSON(200, "deleted")
+	}
 }
