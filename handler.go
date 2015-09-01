@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 	"time"
-
-	"crypto/md5"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,10 +50,9 @@ func newEntry(c *gin.Context) {
 	var entry Entry
 	c.Bind(&entry)
 	// Use title as UID, so entry title should be unique
-	// Base64 or MD5?
-	md5ByteList := md5.Sum([]byte(entry.Title))
-	computedCheckSum := fmt.Sprintf("%x", md5ByteList)
-	entry.Id = string(computedCheckSum)
+	// TODO figure out how to remove punctuation in title
+	lst := strings.Fields(entry.Title)
+	entry.Id = strings.Join(lst, "-")
 	entry.Date = time.Now()
 
 	log.Println(entry)

@@ -9,7 +9,7 @@ func main() {
 	{
 		archives.GET("", allEntries)
 		archives.GET(":id", entry)
-		archives.POST(":id", newEntry)
+		archives.POST("", newEntry)
 		archives.DELETE(":id", deleteEntry)
 	}
 	about := router.Group("/about")
