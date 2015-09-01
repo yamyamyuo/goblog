@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 
+	"crypto/md5"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +15,7 @@ type Entry struct {
 	Title string    `form:"title"`
 	Date  time.Time `form:"time"`
 	Id    string    `form:"id"`
-	Text  string    `form:text`
+	Text  string    `form:"text"`
 }
 
 //TODO use database
@@ -41,30 +43,30 @@ func entry(c *gin.Context) {
 	entry, ok := AllEntries[id]
 	if !ok {
 		c.String(404, "Not Found\n")
+	} else {
+		c.JSON(200, entry)
 	}
-	c.JSON(200, entry)
 }
 
 func newEntry(c *gin.Context) {
 	var entry Entry
 	c.Bind(&entry)
+	// Use title as UID, so entry title should be unique
+	// Base64 or MD5?
+	md5ByteList := md5.Sum([]byte(entry.Title))
+	computedCheckSum := fmt.Sprintf("%x", md5ByteList)
+	entry.Id = string(computedCheckSum)
 	entry.Date = time.Now()
-	fmt.Println(entry)
+
+	log.Println(entry)
+
+	// year, month, day := entry.Date.Date()
 	c.JSON(201, entry)
-	// if c.Bind(&entry) == nil {
-	// 	log.Println(entry)
-	// 	c.JSON(200, gin.H{
-	// 		"123": "234",
-	// 		"321": "666",
-	// 	})
-	// } else {
-	// 	c.JSON(404, "Not Found\n")
-	// }
 }
 
 func deleteEntry(c *gin.Context) {
 	var entry Entry
 	c.Bind(&entry)
-	fmt.Println(entry.Id)
+	log.Println(entry.Id)
 	c.JSON(201, "deleted")
 }
