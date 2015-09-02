@@ -5,6 +5,10 @@ import "github.com/gin-gonic/gin"
 func main() {
 	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	router.LoadHTMLFiles("index.html")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(200, "index.html", nil)
+	})
 	archives := router.Group("/archives")
 	{
 		archives.GET("", allEntries)
