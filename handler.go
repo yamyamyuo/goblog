@@ -15,7 +15,6 @@ type Entry struct {
 	Text  string    `form:"text"`
 }
 
-//TODO use database
 var AllEntries map[string]Entry = make(map[string]Entry)
 
 func aboutPage(c *gin.Context) {
